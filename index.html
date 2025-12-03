@@ -3,734 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maze Runner - La Venganza de los Rivales</title>
-    <!-- Carga de Tailwind CSS para estilos de la interfaz (UI) -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Estilos personalizados para el juego */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* Fondo oscuro */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        #game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #2d3748;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
-            padding: 1.5rem;
-        }
-
-        #gameCanvas {
-            border: 4px solid #4a5568;
-            border-radius: 0.5rem;
-            background-color: #000;
-        }
-
-        .status-bar {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 0;
-            color: white;
-            font-size: 1.125rem;
-            font-weight: bold;
-        }
-
-        /* Estilos para el overlay de estado del juego */
-        #message-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            z-index: 100;
-        }
-        #message-overlay h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-        #message-overlay p { font-size: 1.5rem; margin-bottom: 2rem; }
-        #message-overlay button {
-            padding: 0.75rem 2rem;
-            background-color: #38a169;
-            color: white;
-            border-radius: 0.5rem;
-            transition: background-color 0.3s;
-            font-weight: bold;
-        }
-        #message-overlay button:hover { background-color: #2f855a; }
-
-        /* Icono de vida (corazón) */
-        .heart {
-            color: #e53e3e;
-            font-size: 1.25rem;
-            margin-left: 0.5rem;
-        }
-    </style>
+    <title>Finanzas360 - Gestor Financiero</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="container">
+        <!-- Sidebar de Navegación -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">F</div>
+                <span class="logo-text">Finanzas360</span>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-tab="dashboard">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Panel Principal</span>
+                </button>
+                <button class="nav-btn" data-tab="transactions">
+                    <i class="fas fa-wallet"></i>
+                    <span>Transacciones</span>
+                </button>
+                <button class="nav-btn" data-tab="health">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>Salud Financiera</span>
+                </button>
+                <button class="nav-btn" data-tab="investments">
+                    <i class="fas fa-trending-up"></i>
+                    <span>Inversiones</span>
+                </button>
+            </nav>
 
-<div id="game-container">
-    <div class="status-bar">
-        <span>Nivel: <span id="levelDisplay">1</span> / 5</span>
-        <span>Puntuación: <span id="scoreDisplay">0</span></span>
-        <span>Vidas: <span id="livesDisplay"></span></span>
+            <div class="sidebar-footer">
+                <div class="patrimonio-card">
+                    <p>Patrimonio Neto</p>
+                    <p class="patrimonio-value" id="patrimonio">$0</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Área Principal -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <h1 id="page-title">Resumen General</h1>
+                    <p class="subtitle">Gestiona tu camino hacia la libertad financiera.</p>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar">U</div>
+                </div>
+            </header>
+
+            <!-- DASHBOARD TAB -->
+            <section id="dashboard" class="tab-content active">
+                <div class="cards-grid">
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="card-title">Saldo Total</p>
+                            <h3 class="card-value" id="saldo">$0</h3>
+                            <p class="card-subtext">Disponible para invertir/ahorrar</p>
+                        </div>
+                        <div class="card-icon wallet">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="card-title">Ingresos</p>
+                            <h3 class="card-value" id="ingresos">$0</h3>
+                        </div>
+                        <div class="card-icon income">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="card-title">Gastos</p>
+                            <h3 class="card-value" id="gastos">$0</h3>
+                        </div>
+                        <div class="card-icon expense">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-content">
+                            <p class="card-title">Tasa de Ahorro</p>
+                            <h3 class="card-value" id="tasaAhorro">0%</h3>
+                            <p class="card-subtext" id="tasaAhorroMsg">Intenta llegar al 20%</p>
+                        </div>
+                        <div class="card-icon target">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="card">
+                        <h3 class="card-title"><i class="fas fa-pie-chart"></i> Distribución de Gastos</h3>
+                        <div class="chart-container">
+                            <canvas id="gastos-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Flujo de Caja</h3>
+                        <div class="chart-container">
+                            <canvas id="flujo-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TRANSACTIONS TAB -->
+            <section id="transactions" class="tab-content">
+                <div class="transactions-grid">
+                    <div class="card form-card">
+                        <h3><i class="fas fa-plus-circle"></i> Nueva Transacción</h3>
+                        <form id="transactionForm">
+                            <div class="toggle-group">
+                                <button type="button" class="toggle-btn active" data-type="gasto">Gasto</button>
+                                <button type="button" class="toggle-btn" data-type="ingreso">Ingreso</button>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Monto</label>
+                                <div class="input-with-icon">
+                                    <span>$</span>
+                                    <input type="number" id="monto" placeholder="0.00" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Descripción</label>
+                                <input type="text" id="descripcion" placeholder="Ej. Supermercado, Salario..." required>
+                            </div>
+
+                            <div class="form-group" id="categoriaGroup">
+                                <label>Categoría</label>
+                                <select id="categoria">
+                                    <option value="alimentacion">Alimentación</option>
+                                    <option value="vivienda">Vivienda</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="servicios">Servicios</option>
+                                    <option value="entretenimiento">Entretenimiento</option>
+                                    <option value="salud">Salud</option>
+                                    <option value="educacion">Educación</option>
+                                    <option value="deuda">Pago de Deuda</option>
+                                    <option value="otros">Otros</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Agregar Transacción</button>
+                        </form>
+                    </div>
+
+                    <div class="card transactions-list">
+                        <h3>Historial Reciente</h3>
+                        <table id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Categoría</th>
+                                    <th>Fecha</th>
+                                    <th>Monto</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                        <p id="emptyMsg" class="empty-message">No hay transacciones registradas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HEALTH TAB -->
+            <section id="health" class="tab-content">
+                <div class="health-header card">
+                    <h2>Diagnóstico Financiero</h2>
+                    <p>Basado en tus registros actuales, este es el estado de tu salud financiera.</p>
+                </div>
+
+                <div class="health-grid">
+                    <div class="health-card">
+                        <div class="health-header-card">
+                            <h4>Tasa de Ahorro</h4>
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="health-value" id="healthSavingsRate">0%</div>
+                        <p>De tus ingresos mensuales.</p>
+                        <div class="health-footer">
+                            <p id="healthSavingsMsg">Objetivo: Intenta llegar al 20%.</p>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <div class="health-header-card">
+                            <h4>Ratio de Deuda</h4>
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="health-value" id="healthDebtRatio">0%</div>
+                        <p>De tus ingresos destinados a deuda.</p>
+                        <div class="health-footer">
+                            <p id="healthDebtMsg">Saludable. Mantienes tus deudas bajo control.</p>
+                        </div>
+                    </div>
+
+                    <div class="health-card">
+                        <div class="health-header-card">
+                            <h4>Fondo Emergencia</h4>
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="health-value"><span id="healthEmergency">0</span> <small>meses</small></div>
+                        <p>Cubiertos con tu saldo actual.</p>
+                        <div class="health-footer">
+                            <p>Se recomienda tener de 3 a 6 meses de gastos.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- INVESTMENTS TAB -->
+            <section id="investments" class="tab-content">
+                <div class="card">
+                    <h3>Configura tu Perfil de Inversor</h3>
+                    <div class="risk-profiles">
+                        <button class="profile-btn" data-profile="conservador">
+                            <span class="profile-name">Conservador</span>
+                            <p class="profile-desc">Prioriza la preservación del capital.</p>
+                            <div class="profile-allocations">
+                                <span>RF: 70% | RV: 30%</span>
+                            </div>
+                        </button>
+                        <button class="profile-btn active" data-profile="moderado">
+                            <span class="profile-name">Moderado</span>
+                            <p class="profile-desc">Balance entre seguridad y crecimiento.</p>
+                            <div class="profile-allocations">
+                                <span>RF: 50% | RV: 50%</span>
+                            </div>
+                        </button>
+                        <button class="profile-btn" data-profile="agresivo">
+                            <span class="profile-name">Agresivo</span>
+                            <p class="profile-desc">Busca maximizar rendimientos.</p>
+                            <div class="profile-allocations">
+                                <span>RF: 30% | RV: 70%</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="investment-grid">
+                    <div class="card">
+                        <h4>Composición del Portafolio</h4>
+                        <div class="chart-container">
+                            <canvas id="portfolio-chart"></canvas>
+                        </div>
+                        <div class="portfolio-info">
+                            <p>Retorno Anual Estimado</p>
+                            <p class="return-rate" id="returnRate">8%</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4>Proyección de Patrimonio (20 años)</h4>
+                        <p class="chart-subtitle">Proyección basada en ahorro mensual constante invertido mensualmente.</p>
+                        <div class="chart-container">
+                            <canvas id="projection-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <canvas id="gameCanvas" width="480" height="480"></canvas>
-
-    <div id="message-overlay" class="absolute inset-0 hidden">
-        <h1 id="overlayTitle"></h1>
-        <p id="overlayMessage"></p>
-        <button id="overlayButton">Comenzar Juego</button>
-    </div>
-</div>
-
-<script>
-    // ===========================================
-    // CONFIGURACIÓN DEL JUEGO Y CONSTANTES
-    // ===========================================
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const GRID_SIZE = 15; // Tamaño del laberinto 15x15
-    const TILE_SIZE = canvas.width / GRID_SIZE;
-    const PLAYER_COLOR = '#ffeb3b'; // Amarillo (Pac-Man)
-    const POINT_COLOR = '#fff';     // Puntos blancos
-    const WALL_COLOR = '#4299e1';    // Azul (Muro)
-
-    let score = 0;
-    let lives = 3;
-    let levelIndex = 0; // 0 a 4 (para 5 niveles)
-    let gameState = 'MENU'; // 'MENU', 'PLAYING', 'LEVEL_COMPLETE', 'GAME_OVER', 'VICTORY'
-    let rivals = [];
-    let player = {};
-    let pointMap = []; // Mapa de puntos recolectables
-
-    // Definición de los 5 mapas
-    // 0 = Espacio, 1 = Muro, 2 = Punto de recolección, 3 = Rival Spawn, 4 = Player Spawn
-    const MAPS_DATA = [
-        // NIVEL 1: FÁCIL
-        [ // 15x15
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-            [1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-            [1, 0, 0, 4, 2, 2, 1, 3, 3, 2, 2, 3, 0, 0, 1], // Spawn area
-            [1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-            [1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ],
-        // NIVEL 2: MODERADO
-        [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 1],
-            [1, 0, 0, 4, 2, 2, 2, 3, 3, 2, 2, 2, 3, 0, 1], // Spawn area
-            [1, 1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ],
-        // NIVEL 3: ESTÁNDAR
-        [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 0, 0, 4, 2, 2, 2, 3, 3, 2, 2, 2, 3, 0, 1], // Spawn area
-            [1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ],
-        // NIVEL 4: DIFÍCIL
-        [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-            [1, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-            [1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1],
-            [1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1],
-            [1, 0, 0, 4, 2, 2, 2, 3, 3, 2, 2, 2, 3, 0, 1], // Spawn area
-            [1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 1, 1],
-            [1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 1],
-            [1, 2, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1],
-            [1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ],
-        // NIVEL 5: MUY DIFÍCIL
-        [
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 4, 2, 2, 2, 2, 2, 3, 3, 2, 2, 2, 2, 3, 1], // Spawn area
-            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1],
-            [1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-        ]
-    ];
-
-    // Configuración de la dificultad (Velocidad y IA)
-    const DIFFICULTY_SETTINGS = [
-        { speed: 2.0, colors: ['#f87171', '#fb923c', '#a78bfa'], ai: ['PATROL', 'RANDOM', 'RANDOM'] }, // Nivel 1
-        { speed: 2.5, colors: ['#ef4444', '#f97316', '#8b5cf6'], ai: ['PATROL', 'CHASE_SLOW', 'RANDOM'] }, // Nivel 2
-        { speed: 3.0, colors: ['#dc2626', '#ea580c', '#7c3aed'], ai: ['CHASE', 'RANDOM', 'PATROL'] }, // Nivel 3
-        { speed: 3.5, colors: ['#b91c1c', '#c2410c', '#6d28d9'], ai: ['CHASE', 'CHASE_SLOW', 'RANDOM'] }, // Nivel 4
-        { speed: 4.0, colors: ['#991b1b', '#9a3412', '#5b21b6'], ai: ['CHASE', 'CHASE', 'CHASE'] } // Nivel 5
-    ];
-
-    // Mapa de direcciones para movimiento
-    const DIRECTIONS = {
-        'UP': { dx: 0, dy: -1 },
-        'DOWN': { dx: 0, dy: 1 },
-        'LEFT': { dx: -1, dy: 0 },
-        'RIGHT': { dx: 1, dy: 0 }
-    };
-
-    // ===========================================
-    // CLASES DE JUEGO
-    // ===========================================
-
-    /**
-     * Clase Base para el Jugador y los Rivales (Entidades)
-     */
-    class Entity {
-        constructor(gridX, gridY, radius, speed, color) {
-            this.gridX = gridX;
-            this.gridY = gridY;
-            this.x = gridX * TILE_SIZE + TILE_SIZE / 2;
-            this.y = gridY * TILE_SIZE + TILE_SIZE / 2;
-            this.radius = radius;
-            this.speed = speed;
-            this.color = color;
-            this.vx = 0; // Velocidad X
-            this.vy = 0; // Velocidad Y
-            this.nextDirection = null;
-        }
-
-        draw() {
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // Verifica si una posición de cuadrícula es un muro
-        isWall(gx, gy) {
-            if (gx < 0 || gx >= GRID_SIZE || gy < 0 || gy >= GRID_SIZE) return true;
-            // 1 es el código para Muro en los mapas
-            return pointMap[gy][gx] === 1;
-        }
-
-        // Mueve la entidad con manejo de colisiones a nivel de cuadrícula
-        move() {
-            const currentTileX = Math.round(this.x / TILE_SIZE - 0.5);
-            const currentTileY = Math.round(this.y / TILE_SIZE - 0.5);
-
-            // Intentar cambiar de dirección en el centro de una casilla
-            if (this.nextDirection &&
-                Math.abs(this.x - (currentTileX * TILE_SIZE + TILE_SIZE / 2)) < 1 &&
-                Math.abs(this.y - (currentTileY * TILE_SIZE + TILE_SIZE / 2)) < 1) {
-
-                const { dx, dy } = DIRECTIONS[this.nextDirection];
-                if (!this.isWall(currentTileX + dx, currentTileY + dy)) {
-                    this.vx = dx * this.speed;
-                    this.vy = dy * this.speed;
-                    this.nextDirection = null;
-                }
-            }
-
-            // Mover
-            const newX = this.x + this.vx;
-            const newY = this.y + this.vy;
-
-            // Detección de colisiones a lo largo del movimiento
-            const nextTileX = Math.round(newX / TILE_SIZE - 0.5);
-            const nextTileY = Math.round(newY / TILE_SIZE - 0.5);
-
-            if (this.isWall(nextTileX, currentTileY) && this.vx !== 0) {
-                this.vx = 0;
-                this.x = currentTileX * TILE_SIZE + TILE_SIZE / 2; // Alinear al centro
-            }
-            if (this.isWall(currentTileX, nextTileY) && this.vy !== 0) {
-                this.vy = 0;
-                this.y = currentTileY * TILE_SIZE + TILE_SIZE / 2; // Alinear al centro
-            }
-
-            this.x += this.vx;
-            this.y += this.vy;
-            this.gridX = Math.round(this.x / TILE_SIZE - 0.5);
-            this.gridY = Math.round(this.y / TILE_SIZE - 0.5);
-
-            // Mantener alineación estricta al centro de la casilla si no hay velocidad
-            if (this.vx === 0 && this.vy === 0) {
-                this.x = currentTileX * TILE_SIZE + TILE_SIZE / 2;
-                this.y = currentTileY * TILE_SIZE + TILE_SIZE / 2;
-            }
-        }
-    }
-
-    /**
-     * Clase Rival (Enemigo) con Lógica de IA
-     */
-    class Rival extends Entity {
-        constructor(id, gridX, gridY, speed, color, aiType) {
-            super(gridX, gridY, TILE_SIZE * 0.4, speed, color);
-            this.id = id;
-            this.aiType = aiType;
-            this.lastMoveTime = 0;
-            this.moveInterval = 150; // ms base
-            this.patrolPath = []; // Para IA de Patrulla
-            this.patrolIndex = 0;
-        }
-
-        // Lógica de movimiento principal
-        update(playerGridPos) {
-            if (gameState !== 'PLAYING') return;
-
-            const now = Date.now();
-            // CHASE_SLOW sólo calcula la ruta una vez cada 600ms
-            const interval = this.aiType === 'CHASE_SLOW' ? 600 : (this.aiType === 'CHASE' ? 200 : this.moveInterval);
-
-            if (now > this.lastMoveTime + interval) {
-                this.executeAI(playerGridPos);
-                this.lastMoveTime = now;
-            }
-
-            this.move(); // Llama al movimiento físico
-        }
-
-        executeAI(playerGridPos) {
-            const currentTileX = Math.round(this.x / TILE_SIZE - 0.5);
-            const currentTileY = Math.round(this.y / TILE_SIZE - 0.5);
-
-            if (this.nextDirection) return; // Esperar a alinearse para el próximo movimiento
-
-            let nextDirectionName = null;
-
-            switch (this.aiType) {
-                case 'RANDOM':
-                    nextDirectionName = this.getValidRandomDirection(currentTileX, currentTileY);
-                    break;
-                case 'PATROL':
-                    // Si el camino no está configurado, asume movimiento en cuadrícula predefinido
-                    nextDirectionName = this.getPatrolDirection(currentTileX, currentTileY);
-                    break;
-                case 'CHASE':
-                case 'CHASE_SLOW':
-                    // Utiliza BFS para encontrar la mejor dirección
-                    nextDirectionName = this.getChaseDirection(currentTileX, currentTileY, playerGridPos);
-                    break;
-            }
-
-            if (nextDirectionName) {
-                this.nextDirection = nextDirectionName;
-            }
-        }
-
-        // Lógica de IA: Movimiento aleatorio
-        getValidRandomDirection(x, y) {
-            const validDirections = [];
-            for (const dirName in DIRECTIONS) {
-                const { dx, dy } = DIRECTIONS[dirName];
-                if (!this.isWall(x + dx, y + dy)) {
-                    validDirections.push(dirName);
-                }
-            }
-            if (validDirections.length > 0) {
-                return validDirections[Math.floor(Math.random() * validDirections.length)];
-            }
-            return null;
-        }
-
-        // Lógica de IA: Patrulla (simple, sólo cambia de dirección al chocar)
-        getPatrolDirection(x, y) {
-            if (this.vx === 0 && this.vy === 0) {
-                // Si está detenido, elige una nueva dirección al azar para empezar
-                return this.getValidRandomDirection(x, y);
-            }
-
-            // Simula un choque o fin de camino y elige una nueva dirección al azar
-            if (this.isWall(x + Math.sign(this.vx), y + Math.sign(this.vy))) {
-                return this.getValidRandomDirection(x, y);
-            }
-
-            // Continúa en la misma dirección
-            if (this.vx > 0) return 'RIGHT';
-            if (this.vx < 0) return 'LEFT';
-            if (this.vy > 0) return 'DOWN';
-            if (this.vy < 0) return 'UP';
-
-            return null;
-        }
-
-        // Lógica de IA: Persecución (usando BFS para la ruta más corta)
-        getChaseDirection(startX, startY, endPos) {
-            const queue = [{ x: startX, y: startY, path: [] }];
-            const visited = new Set();
-
-            while (queue.length > 0) {
-                const { x, y, path } = queue.shift();
-                const key = `${x},${y}`;
-
-                if (key === `${endPos.x},${endPos.y}`) {
-                    // Si la ruta no es vacía, el primer paso es la dirección a tomar
-                    if (path.length > 0) return path[0];
-                    return null; // Ya está en la posición
-                }
-
-                if (visited.has(key)) continue;
-                visited.add(key);
-
-                // Probar las 4 direcciones
-                for (const dirName in DIRECTIONS) {
-                    const { dx, dy } = DIRECTIONS[dirName];
-                    const nextX = x + dx;
-                    const nextY = y + dy;
-
-                    if (!this.isWall(nextX, nextY)) {
-                        const nextPath = [...path, dirName];
-                        queue.push({ x: nextX, y: nextY, path: nextPath });
-                    }
-                }
-            }
-            // Si no se encuentra ruta, intenta moverse aleatoriamente
-            return this.getValidRandomDirection(startX, startY);
-        }
-    }
-
-
-    // ===========================================
-    // FUNCIONES DE CONTROL DE JUEGO
-    // ===========================================
-
-    // Encuentra posiciones de inicio y puntos en el mapa actual
-    function findInitialPositions(map) {
-        const playerSpawn = { x: 0, y: 0 };
-        const rivalSpawns = [];
-        let pointsCount = 0;
-
-        for (let y = 0; y < GRID_SIZE; y++) {
-            for (let x = 0; x < GRID_SIZE; x++) {
-                const tile = map[y][x];
-                if (tile === 4) { // Player Spawn
-                    playerSpawn.x = x;
-                    playerSpawn.y = y;
-                } else if (tile === 3) { // Rival Spawn
-                    rivalSpawns.push({ x, y });
-                } else if (tile === 2) { // Point
-                    pointsCount++;
-                }
-            }
-        }
-        return { playerSpawn, rivalSpawns, pointsCount };
-    }
-
-    // Inicializa o reinicia el nivel
-    function initializeLevel() {
-        // Cargar mapa y configuración de dificultad
-        const currentLevelData = DIFFICULTY_SETTINGS[levelIndex];
-        const map = MAPS_DATA[levelIndex];
-        const { playerSpawn, rivalSpawns, pointsCount } = findInitialPositions(map);
-
-        pointMap = map.map(row => [...row]); // Copia profunda del mapa
-
-        // Inicializar Jugador
-        player = new Entity(playerSpawn.x, playerSpawn.y, TILE_SIZE * 0.45, currentLevelData.speed * 1.2, PLAYER_COLOR);
-        player.vx = 0;
-        player.vy = 0;
-
-        // Inicializar Rivales
-        rivals = rivalSpawns.map((pos, i) => {
-            const color = currentLevelData.colors[i];
-            const aiType = currentLevelData.ai[i];
-            const speed = currentLevelData.speed;
-            return new Rival(i, pos.x, pos.y, speed, color, aiType);
-        });
-
-        // Actualizar UI
-        document.getElementById('levelDisplay').textContent = levelIndex + 1;
-        updateLivesDisplay();
-        gameState = 'PLAYING';
-    }
-
-    // Reiniciar posición del jugador y rivales después de una derrota
-    function resetPositions() {
-        const map = MAPS_DATA[levelIndex];
-        const { playerSpawn, rivalSpawns } = findInitialPositions(map);
-
-        player.gridX = playerSpawn.x;
-        player.gridY = playerSpawn.y;
-        player.x = playerSpawn.x * TILE_SIZE + TILE_SIZE / 2;
-        player.y = playerSpawn.y * TILE_SIZE + TILE_SIZE / 2;
-        player.vx = 0;
-        player.vy = 0;
-
-        rivals.forEach((rival, i) => {
-            const pos = rivalSpawns[i];
-            rival.gridX = pos.x;
-            rival.gridY = pos.y;
-            rival.x = pos.x * TILE_SIZE + TILE_SIZE / 2;
-            rival.y = pos.y * TILE_SIZE + TILE_SIZE / 2;
-            rival.vx = 0;
-            rival.vy = 0;
-        });
-    }
-
-    // ===========================================
-    // MANEJO DE ESTADO DEL JUEGO
-    // ===========================================
-
-    function checkCollisions() {
-        // 1. Colisión Jugador vs. Puntos
-        const tileValue = pointMap[player.gridY][player.gridX];
-        if (tileValue === 2) {
-            pointMap[player.gridY][player.gridX] = 0; // Quitar punto
-            score += 10;
-            document.getElementById('scoreDisplay').textContent = score;
-
-            // 2. Colisión Jugador vs. Rival (Derrota)
-        } else if (tileValue === 0 && rivals.some(rival => isColliding(player, rival))) {
-            handleDefeat();
-            return true;
-        }
-
-        // 3. Condición de Victoria (Nivel)
-        let pointsLeft = 0;
-        for (let y = 0; y < GRID_SIZE; y++) {
-            for (let x = 0; x < GRID_SIZE; x++) {
-                if (pointMap[y][x] === 2) {
-                    pointsLeft++;
-                }
-            }
-        }
-        if (pointsLeft === 0) {
-            handleLevelComplete();
-            return true;
-        }
-        return false;
-    }
-
-    // Verifica si dos entidades están colisionando (por distancia)
-    function isColliding(e1, e2) {
-        const dx = e1.x - e2.x;
-        const dy = e1.y - e2.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        // Colisión si la distancia es menor que la suma de radios
-        return distance < (e1.radius + e2.radius);
-    }
-
-    function handleDefeat() {
-        lives--;
-        updateLivesDisplay();
-        if (lives > 0) {
-            showMessage('¡Ouch!', `Te queda(n) ${lives} vida(s).`, 'Reiniciar Nivel', resetPositions);
-        } else {
-            gameState = 'GAME_OVER';
-            showMessage('¡Fin del Juego!', `Tu puntuación final es ${score}.`, 'Jugar de Nuevo', startGame);
-        }
-    }
-
-    function handleLevelComplete() {
-        levelIndex++;
-        if (levelIndex < 5) {
-            showMessage(`Nivel ${levelIndex} Superado!`, `Prepárate para el Nivel ${levelIndex + 1}. La dificultad aumenta.`, 'Continuar', initializeLevel);
-        } else {
-            gameState = 'VICTORY';
-            showMessage('¡VICTORIA FINAL!', `¡Has conquistado todos los laberintos con ${score} puntos!`, 'Jugar de Nuevo', startGame);
-        }
-    }
-
-    function startGame() {
-        score = 0;
-        lives = 3;
-        levelIndex = 0;
-        document.getElementById('scoreDisplay').textContent = score;
-        hideMessage();
-        initializeLevel();
-        if (!animationFrame) {
-            gameLoop();
-        }
-    }
-
-    // ===========================================
-    // RENDERING (DIBUJO)
-    // ===========================================
-
-    function drawMap() {
-        for (let y = 0; y < GRID_SIZE; y++) {
-            for (let x = 0; x < GRID_SIZE; x++) {
-                const tileValue = pointMap[y][x];
-                const rectX = x * TILE_SIZE;
-                const rectY = y * TILE_SIZE;
-
-                // Dibujar Muros
-                if (tileValue === 1) {
-                    ctx.fillStyle = WALL_COLOR;
-                    ctx.fillRect(rectX, rectY, TILE_SIZE, TILE_SIZE);
-                }
-                // Dibujar Puntos
-                else if (tileValue === 2) {
-                    ctx.fillStyle = POINT_COLOR;
-                    ctx.beginPath();
-                    ctx.arc(rectX + TILE_SIZE / 2, rectY + TILE_SIZE / 2, TILE_SIZE * 0.1, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                // Dibujar Área de Spawn (Opcional, para debug)
-                else if (tileValue === 3 || tileValue === 4) {
-                    // ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-                    // ctx.fillRect(rectX, rectY, TILE_SIZE, TILE_SIZE);
-                }
-            }
-        }
-    }
-
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar
-        drawMap();
-        player.draw();
-        rivals.forEach(r => r.draw());
-    }
-
-    function updateLivesDisplay() {
-        const livesHtml = Array(lives).fill('<span class="heart">❤️</span>').join('');
-        document.getElementById('livesDisplay').innerHTML = livesHtml;
-    }
-
-    function showMessage(title, message, buttonText, action) {
-        const overlay = document.getElementById('message-overlay');
-        document.getElementById('overlayTitle').textContent = title;
-        document.getElementById('overlayMessage').textContent = message;
-        document.getElementById('overlayButton').textContent = buttonText;
-        overlay.style.display = 'flex';
-        overlay.onclick = () => {
-            overlay.onclick = null; // Prevenir múltiples llamadas
-            action();
-        };
-    }
-
-    function hideMessage() {
-        document.getElementById('message-overlay').style.display = 'none';
-        document.getElementById('overlayButton').onclick = null;
-    }
-
-    // ===========================================
-    // BUCLE PRINCIPAL DEL JUEGO
-    // ===========================================
-
-    let animationFrame;
-    function gameLoop() {
-        if (gameState === 'PLAYING') {
-            // Actualizar jugador
-            player.move();
-
-            // Actualizar rivales (IA)
-            const playerGridPos = { x: player.gridX, y: player.gridY };
-            rivals.forEach(r => r.update(playerGridPos));
-
-            // Comprobar colisiones y estado de victoria
-            checkCollisions();
-
-            // Dibujar
-            draw();
-        }
-
-        if (gameState !== 'GAME_OVER' && gameState !== 'VICTORY') {
-            animationFrame = requestAnimationFrame(gameLoop);
-        } else {
-            cancelAnimationFrame(animationFrame);
-            animationFrame = null;
-        }
-    }
-
-
-    // ===========================================
-    // MANEJO DE ENTRADAS DEL TECLADO
-    // ===========================================
-
-    window.addEventListener('keydown', (e) => {
-        if (gameState !== 'PLAYING') return;
-
-        let direction = null;
-        switch (e.key) {
-            case 'ArrowUp':
-            case 'w':
-            case 'W':
-                direction = 'UP';
-                break;
-            case 'ArrowDown':
-            case 's':
-            case 'S':
-                direction = 'DOWN';
-                break;
-            case 'ArrowLeft':
-            case 'a':
-            case 'A':
-                direction = 'LEFT';
-                break;
-            case 'ArrowRight':
-            case 'd':
-            case 'D':
-                direction = 'RIGHT';
-                break;
-        }
-
-        if (direction) {
-            // Establece la dirección deseada para que el jugador la intente al alinearse con la cuadrícula
-            player.nextDirection = direction;
-        }
-    });
-
-    // Inicialización al cargar la página
-    window.onload = function() {
-        showMessage('¡Maze Runner!', 'Usa las teclas de flecha (o WASD) para moverte y recolectar todos los puntos. ¡Evita a los rivales!', 'Comenzar Juego', startGame);
-    };
-
-</script>
-
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
